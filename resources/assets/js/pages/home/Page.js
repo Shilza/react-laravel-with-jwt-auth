@@ -18,7 +18,7 @@ class Page extends React.Component {
     }
 
     componentDidMount() {
-        const social = this.props.match.params.social
+        const social = this.props.match.params.social;
         const params = this.props.location.search;
 
         setTimeout(function() { 

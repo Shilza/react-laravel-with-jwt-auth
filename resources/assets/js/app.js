@@ -3,13 +3,21 @@ import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 import store from './store'
 import Routes from './routes'
-import * as action from './store/actions'
+import AuthService from './services';
 
-store.dispatch(action.authCheck());
+async function start() {
 
-render(
-    <Provider store={store}>
-        <Routes/>
-    </Provider>,
-    document.getElementById('app')
-);
+    if(localStorage.hasOwnProperty('access_token'))
+        await store.dispatch(AuthService.me());
+
+    render(
+        <Provider store={store}>
+            <Routes/>
+        </Provider>,
+        document.getElementById('root')
+    );
+}
+
+start();
+
+

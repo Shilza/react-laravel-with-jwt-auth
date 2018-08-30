@@ -1,7 +1,5 @@
-// import libs
-import {connect} from 'react-redux'
 
-// import component
+import {connect} from 'react-redux'
 import Page from './Page'
 
 const mapStateToProps = state => {

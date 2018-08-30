@@ -98,6 +98,7 @@ class Page extends React.Component {
             return <Redirect to='/' replace/>
         }
         const {errors} = this.state;
+
         return (
             <div>
                 <PageHeader heading="Register"/>
@@ -123,7 +124,8 @@ class Page extends React.Component {
                         </Message>}
                         {this.state.isSuccess && <Message positive>
                             <Message.Content>
-                                Registered Successfully ! <Link to='/login' replace>Login</Link> here
+                                Registered Successfully !
+                                <Link to='/login' replace>Login</Link> here
                             </Message.Content>
                         </Message>}
                         <Form size='large'>

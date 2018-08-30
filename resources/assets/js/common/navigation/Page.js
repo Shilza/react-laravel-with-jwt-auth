@@ -1,6 +1,4 @@
-/**
- * Created by Sumit-Yadav on 06-10-2017.
- */
+
 import React from 'react'
 import {NavLink, Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -24,16 +22,17 @@ class Page extends React.Component {
     }
 
     handleLogout() {
-        event.preventDefault();
+        //preventDefault is commented out,
+        //because its presence does not allow logout event in the Mozilla
+        //event.preventDefault();
         this.props.dispatch(actions.authLogout());
     }
-
 
     render() {
         this.avatar = (
             <span>
                  <Image avatar src={require('../../../images/avatar/boy.png')}
-                        verticalAlign='top'/> {this.props.userName}
+                        verticalAlign='middle'/> {this.props.userName}
             </span>
         );
         return (

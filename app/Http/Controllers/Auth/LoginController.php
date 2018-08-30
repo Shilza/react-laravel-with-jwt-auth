@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Utils\RefreshHelper\RefreshHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use JWTAuth;
+use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\User;
-use Socialite;
+use App\Http\Controllers\Api\UserController;
+
+
 
 class LoginController extends Controller
 {
@@ -22,34 +27,30 @@ class LoginController extends Controller
     |
     */
 
-    public function login(Request $request)
+    /**
+     * Get a JWT via given credentials.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login()
     {
-        // grab credentials from the request
-        $credentials = $request->only('email', 'password');
+        $credentials = request(['email', 'password']);
 
-        try {
-            // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json([
-                    "error" => "invalid_credentials",
-                    "message" => "The user credentials were incorrect. "
-                ], 401);
-            }
-        } catch (JWTException $e) {
-            // something went wrong whilst attempting to encode the token
-            return response()->json([
-                "error" => "could_not_create_token",
-                "message" => "Enable to process request."
-            ], 422);
-        }
+        $access = auth()->attempt($credentials);
 
-        // all good so return the token
-        $user =  User::where('email', $request->get('email'))->get();
+        if (!$access)
+            return response()->json(['error' => 'Unauthorized'], 401);
+
+        $user = auth()->user();
+        $refresh = RefreshHelper::generateRefresh($user->id);
+        User::where('id', $user->id)->update(['refresh_token' => $refresh]);
+
         return response()->json([
             'user'  => $user,
-            'token' => $token,
+            'access_token' => $access,
+            'expires_in' => time() + auth()->factory()->getTTL() * 60,
+            'refresh_token' => $refresh
         ],200);
-
     }
 
     public function socialLogin($social)

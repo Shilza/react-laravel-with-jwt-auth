@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import Main from '../Main'
 
 
-const PrivateRoute = ({component: Component,isAuthenticated, ...rest}) => (
+const PrivateRoute = ({component: Component, isAuthenticated, ...rest}) => (
     <Route {...rest} render={props => (
         isAuthenticated ? (
             <Main>
@@ -18,7 +18,6 @@ const PrivateRoute = ({component: Component,isAuthenticated, ...rest}) => (
         )
     )}/>
 );
-
 
 const mapStateToProps = (state) => {
     return {

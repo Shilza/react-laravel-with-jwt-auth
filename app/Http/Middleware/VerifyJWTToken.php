@@ -3,9 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use JWTAuth;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
 
 class VerifyJwtToken
 {
@@ -19,26 +20,22 @@ class VerifyJwtToken
     public function handle($request, Closure $next)
     {
         try {
+            if (!JWTAuth::parseToken()->authenticate())
+                return response()->json(['error' => 'user_not_found'], 404);
 
-            if (!$user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['user_not_found'], 404);
-            }
-
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'invalid token'], $e->getStatusCode());
         } catch (TokenExpiredException $e) {
 
-            return response()->json(['token_expired'], $e->getStatusCode());
+            return response()->json(['error' => 'token_expired'], 401);
 
         } catch (TokenInvalidException $e) {
 
-            return response()->json(['token_invalid'], $e->getStatusCode());
+            return response()->json(['error' => 'token_invalid'], 401);
 
         } catch (JWTException $e) {
 
-            return response()->json(['token_absent'], $e->getStatusCode());
-
+            return response()->json(['error' => 'token_absent'], 400);
         }
+
 
         return $next($request);
     }

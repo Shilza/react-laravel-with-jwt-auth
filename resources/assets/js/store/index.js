@@ -7,9 +7,8 @@ import {REHYDRATE,persistStore} from 'redux-persist'
 
 const store = createStore(
     RootReducer,
-    compose(
-        applyMiddleware(ReduxThunk,logger)
-    )
+    compose(applyMiddleware(ReduxThunk, logger))
 );
+
 persistStore(store);
 export default store;

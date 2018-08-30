@@ -70,15 +70,15 @@ class Page extends React.Component {
 
     submit(credentials) {
         this.props.dispatch(AuthService.login(credentials))
-            .catch(({error, statusCode}) => {
+            .catch(({message, statusCode}) => {
                 const responseError = {
                     isError: true,
                     code: statusCode,
-                    text: error
+                    text: message
                 };
-                this.setState({responseError});
                 this.setState({
-                    isLoading: false
+                    isLoading: false,
+                    responseError
                 });
             })
 
@@ -174,7 +174,8 @@ class Page extends React.Component {
                             </Segment>
                         </Form>
                         <Message>
-                            New to us? <Link to='/register' replace>Register</Link>
+                            New to us?
+                            <Link to='/register' replace>Register</Link>
                         </Message>
                     </Grid.Column>
                 </Grid>

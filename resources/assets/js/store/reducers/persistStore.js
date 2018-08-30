@@ -10,7 +10,7 @@ const reducer = (state = {}, {type, payload = null}) => {
 };
 
 function persistStore(state, payload) {
-    state = Object.assign({}, state,payload);
+    state = Object.assign({}, state, payload);
     return state;
 }
 

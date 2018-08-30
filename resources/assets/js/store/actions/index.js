@@ -7,15 +7,15 @@ export function authLogin(payload){
     }
 }
 
-
 export function authLogout(){
     return {
         type: ActionTypes.AUTH_LOGOUT
     }
 }
 
-export function authCheck(){
+export function authMe(payload){
     return {
-        type:ActionTypes.AUTH_CHECK
+        type:ActionTypes.AUTH_ME,
+        payload
     }
 }

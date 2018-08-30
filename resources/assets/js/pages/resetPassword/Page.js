@@ -11,7 +11,7 @@ class Page extends React.Component {
         super(props);
         this.validator = new ReeValidate({
             password: 'required|min:6',
-            password_confirmation: 'required|min:6|confirmed:password',
+            password_confirmation: 'required|min:6',
             token: 'required',
             email: 'required'
         });
@@ -20,16 +20,17 @@ class Page extends React.Component {
                 password: '',
                 password_confirmation: '',
                 token: this.props.match.params.token,
-                email: this.props.match.params.email.replace("29gnmLTv686QsnV","@")
+                email: this.props.match.params.email.replace("29gnmLTv686QsnV", "@")
             },
             responseError: {
                 isError: false,
                 code: '',
                 text: ''
             },
+            responseMessage: '',
             isSuccess: false,
             isLoading: false,
-            errors: this.validator.errors
+            errors: this.validator.errors,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -53,6 +54,7 @@ class Page extends React.Component {
 
         const {credentials} = this.state;
 
+
         this.validator.validateAll(credentials)
             .then(success => {
                 if (success) {
@@ -66,23 +68,22 @@ class Page extends React.Component {
 
     submit(credentials) {
         this.props.dispatch(AuthService.updatePassword(credentials))
-            .then((result)  => {
+            .then((message)  => {
                 this.setState({
-                    isLoading: false
-                });
-                this.setState({
+                    isLoading: false,
                     isSuccess: true,
+                    responseMessage: message
                 });
             })
-            .catch(({error, statusCode}) => {
+            .catch(({message, statusCode}) => {
                 const responseError = {
                     isError: true,
                     code: statusCode,
-                    text: error
+                    text: message
                 };
-                this.setState({responseError});
                 this.setState({
-                    isLoading: false
+                    isLoading: false,
+                    responseError
                 });
             })
     }
@@ -123,7 +124,7 @@ class Page extends React.Component {
                         </Message>}
                         {this.state.isSuccess && <Message positive>
                             <Message.Content>
-                                Reset Successfully ! <Link to='/login' replace>Login</Link> here
+                                {this.state.responseMessage} <Link to='/login' replace>Login</Link> here
                             </Message.Content>
                         </Message>}
                         <Form size='large'>

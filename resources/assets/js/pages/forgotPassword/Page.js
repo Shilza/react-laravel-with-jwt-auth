@@ -56,6 +56,7 @@ class Page extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         const {credentials} = this.state;
+
         this.validator.validateAll(credentials)
             .then(success => {
                 if (success) {
@@ -68,20 +69,24 @@ class Page extends React.Component {
     }
 
     submit(credentials) {
+
         this.props.dispatch(AuthService.resetPassword(credentials))
             .then((result)  => {
                 this.setState({
-                    isLoading: false
-                });
-                this.setState({
+                    isLoading: false,
                     isSuccess: true,
+                    responseError: {
+                        isError: false,
+                        code: '',
+                        text: ''
+                    }
                 });
             })
-            .catch(({error, statusCode}) => {
+            .catch(({message, statusCode}) => {
                 const responseError = {
                     isError: true,
                     code: statusCode,
-                    text: error
+                    text: message
                 };
                 this.setState({responseError});
                 this.setState({
@@ -132,7 +137,7 @@ class Page extends React.Component {
                         </Message>}
                         {this.state.isSuccess && <Message positive>
                             <Message.Content>
-                                If the email you entered exists, a reset link has been sent !
+                                Check your email to continue
                             </Message.Content>
                         </Message>}
                         <Form size='large'>
